@@ -14,6 +14,14 @@ public class HomeController {
     public String base() {
         return "base";  // this will look for base.html in templates folder
     }
+    @GetMapping("/contact")
+    public String contact() {
+        return "contact";  // this will look for contact.html in templates folder
+    }
+    @GetMapping("/services")
+    public String services() {
+        return "services";  // this will look for services.html in templates folder
+    }
 
     @GetMapping("/about")
     public String about() {
@@ -22,7 +30,7 @@ public class HomeController {
 
     @GetMapping("/signup")
     public String signup() {
-        return "signup";  // this will look for signup.html in templates folder
+        return "register";  // this will look for signup.html in templates folder
     }
 
     @GetMapping("/login")
