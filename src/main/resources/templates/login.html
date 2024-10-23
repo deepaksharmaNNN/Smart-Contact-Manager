@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="~{base :: parent(~{::#content}, ~{::title}, ~{::script})}">
+<head>
+    <title>Login Page</title>
+</head>
+<body>
+<section id="content">
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti, consequatur?</p>
+</section>
+<script th:fragment="script">
+    console.log('Login Page');
+</script>
+</body>
+</html>

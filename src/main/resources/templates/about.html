@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-th:replace="${base :: parent}" >
+<html lang="en" th:replace="~{base :: parent(~{::#content}, ~{::title}, ~{::script})}" >
 <head>
 
-    <title></title></head>
+    <title>About Page</title>
+</head>
 <body>
-    
+    <div id="content">
+        <p>Lorem ipsum doporibus earum odit recusandae magni, accusantium magnam provident ut vel, cumque necessitatibus assumenda!</p>
+    </div>
+    <script>
+        console.log('About Page');
+    </script>
 </body>
 </html>
