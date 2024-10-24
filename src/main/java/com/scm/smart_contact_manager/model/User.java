@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -39,5 +41,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     Providers provider = Providers.SELF;
     String providerId;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    List<Contact> contacts;
 
 }
