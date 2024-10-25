@@ -16,7 +16,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     String userId;
 
     @Column(name = "user_name", nullable = false)
@@ -39,6 +39,7 @@ public class User {
 
     // Self, Google, GitHub
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     Providers provider = Providers.SELF;
     String providerId;
 

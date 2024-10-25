@@ -1,6 +1,12 @@
 package com.scm.smart_contact_manager.controller;
 
+import com.scm.smart_contact_manager.enums.MessageType;
 import com.scm.smart_contact_manager.forms.UserForm;
+import com.scm.smart_contact_manager.helper.Message;
+import com.scm.smart_contact_manager.mapper.UserMapper;
+import com.scm.smart_contact_manager.service.UserService;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class HomeController {
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/home")
     public String home() {
@@ -46,11 +55,18 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/do-register", method = RequestMethod.POST)
-    public String doRegister(@ModelAttribute UserForm userForm) {
+    public String doRegister(@ModelAttribute UserForm userForm, HttpSession session) {
         // fetch data from request
         // process data
         // verify data
         // if data is correct, save to database
+        userService.saveUser(UserMapper.mapUserFormToUser(userForm));
+        System.out.println("User saved successfully");
+        // add success message
+        Message message = Message.builder().content("Registration Successful").type(MessageType.green).build();
+        session.setAttribute("message", message);
+        // remove message from session
+
         // redirect to login page
         return "redirect:/register";  // this will look for register.html in templates folder
     }

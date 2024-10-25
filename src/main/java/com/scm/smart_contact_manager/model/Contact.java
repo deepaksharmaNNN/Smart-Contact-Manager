@@ -1,8 +1,6 @@
 package com.scm.smart_contact_manager.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -16,12 +14,19 @@ import lombok.experimental.FieldDefaults;
 public class Contact {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     String contactId;
+
     String name;
+
     String email;
+
     String phoneNumber;
+
     String imageLink;
+
     String description;
+
     boolean isFavourite = false;
 
     @ManyToOne
