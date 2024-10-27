@@ -37,15 +37,18 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(userId);
     }
 
-    public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
-    public Optional<User> updateUser(User user) {
-        userRepository.findById(user.getUserId()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        User foundUser = UserMapper.mapUserToUser(user);
-        return Optional.of(userRepository.save(foundUser));
+
+    public void updateUser(User user) {
+        if (user.getPassword() != null) { // Only encode if password is not null
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+        userRepository.save(user);
     }
+
 
     public void deleteUser(String userId) {
         userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));

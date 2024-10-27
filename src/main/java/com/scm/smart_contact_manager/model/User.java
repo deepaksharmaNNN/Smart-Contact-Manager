@@ -25,11 +25,13 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.UUID)
     String userId;
 
-    @Column(name = "user_name", nullable = false)
+    @Column(nullable = false)
     String name;
 
-    @Column(name = "user_email", nullable = false, unique = true)
+    @Column( nullable = false, unique = true)
     String email;
+
+    @Column(nullable = true)
     String password;
 
     @Column(length = 1000)
@@ -49,6 +51,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Builder.Default
     Providers provider = Providers.SELF;
+
     String providerId;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
