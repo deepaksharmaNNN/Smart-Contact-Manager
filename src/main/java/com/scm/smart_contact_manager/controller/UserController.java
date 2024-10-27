@@ -1,5 +1,6 @@
 package com.scm.smart_contact_manager.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,6 +30,7 @@ public class UserController {
     // User delete contact
 
     // User search contact
+
 
 
 }

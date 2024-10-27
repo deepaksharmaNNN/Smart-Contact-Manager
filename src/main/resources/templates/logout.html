@@ -1,0 +1,31 @@
+<!-- logout.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title th:fragment="title">Logout - Smart Contact Manager</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+  <link rel="stylesheet" th:href="@{/css/output.css}"/>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900">
+<section th:fragment="content">
+  <div class="flex justify-center items-center h-screen">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-10">
+      <h1 class="text-3xl font-semibold text-gray-700 dark:text-white mb-4">Are you sure you want to log out?</h1>
+      <p class="text-gray-600 dark:text-gray-400 mb-6">We hate to see you go, but we understand if you need to log out.</p>
+
+      <!-- Logout Form -->
+      <form id="logout-form" th:action="@{/logout}" method="post">
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+        <button type="submit"
+                class="bg-red-600 text-white px-6 py-3 rounded-md hover:bg-red-700 transition">
+          Logout
+        </button>
+      </form>
+
+      <!-- Cancel Button -->
+      <a href="/user/dashboard" class="text-blue-600 hover:underline mt-4 inline-block">Cancel</a>
+    </div>
+  </div>
+</section>
+</body>
+</html>

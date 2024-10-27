@@ -76,4 +76,11 @@ public class HomeController {
         return "redirect:/register";  // this will look for register.html in templates folder
     }
 
+    // User logout
+    @GetMapping("/logout")
+    public String logout(HttpSession session){
+        session.invalidate();
+        return "logout"; // this will look for logout.html in templates folder
+    }
+
 }
