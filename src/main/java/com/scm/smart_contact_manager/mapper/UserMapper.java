@@ -11,16 +11,11 @@ public class UserMapper {
                 .userId(user.getUserId())
                 .name(user.getName())
                 .email(user.getEmail())
-                .password(user.getPassword())
                 .about(user.getAbout())
                 .profileImageLink(user.getProfileImageLink())
                 .phoneNumber(user.getPhoneNumber())
-                .enabled(user.isEnabled())
-                .emailVerified(user.isEmailVerified())
-                .phoneVerified(user.isPhoneVerified())
                 .provider(user.getProvider())
                 .providerId(user.getProviderId())
-                .contacts(user.getContacts())
                 .build();
     }
     public User mapUserFormToUser(UserForm userForm) {

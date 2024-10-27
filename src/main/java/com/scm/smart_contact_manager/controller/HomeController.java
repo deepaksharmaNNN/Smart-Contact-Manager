@@ -6,27 +6,26 @@ import com.scm.smart_contact_manager.helper.Message;
 import com.scm.smart_contact_manager.mapper.UserMapper;
 import com.scm.smart_contact_manager.service.UserService;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
+@RequiredArgsConstructor
 public class HomeController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @GetMapping("/home")
     public String home() {
         return "home";  // this will look for home.html in templates folder
     }
-    @GetMapping("/base")
+    @GetMapping("/")
     public String base() {
-        return "base";  // this will look for base.html in templates folder
+        return "home";  // this will look for base.html in templates folder
     }
     @GetMapping("/contact")
     public String contact() {
@@ -55,10 +54,16 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/do-register", method = RequestMethod.POST)
-    public String doRegister(@ModelAttribute UserForm userForm, HttpSession session) {
+    public String doRegister(@Valid @ModelAttribute UserForm userForm, BindingResult bindingResult, HttpSession session) {
         // fetch data from request
         // process data
         // verify data
+        if (bindingResult.hasErrors()) {
+            System.out.println("Error: " + bindingResult.toString());
+            Message message = Message.builder().content("Invalid Data").type(MessageType.red).build();
+            session.setAttribute("message", message);
+            return "redirect:/register";  // this will look for register.html in templates folder
+        }
         // if data is correct, save to database
         userService.saveUser(UserMapper.mapUserFormToUser(userForm));
         System.out.println("User saved successfully");
