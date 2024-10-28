@@ -59,7 +59,7 @@ public class HomeController {
         // process data
         // verify data
         if (bindingResult.hasErrors()) {
-            System.out.println("Error: " + bindingResult.toString());
+            System.out.println("Error: " + bindingResult);
             Message message = Message.builder().content("Invalid Data").type(MessageType.red).build();
             session.setAttribute("message", message);
             return "redirect:/register";  // this will look for register.html in templates folder

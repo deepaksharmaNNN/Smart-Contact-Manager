@@ -1,7 +1,6 @@
 package com.scm.smart_contact_manager.controller;
 
 import com.scm.smart_contact_manager.helper.FetchingHelper;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -9,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.security.Principal;
 
 @RestController
 @RequestMapping("/user")
