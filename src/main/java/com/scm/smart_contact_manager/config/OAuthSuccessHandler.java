@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -28,48 +29,54 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         log.info("OAuth Success Handler invoked.");
 
-        DefaultOAuth2User oAuth2User = (DefaultOAuth2User) authentication.getPrincipal();
+        // Identify the provider
+        var provider = (OAuth2AuthenticationToken) authentication;
+        String providerName = provider.getAuthorizedClientRegistrationId();
 
-        // Retrieve user details from OAuth attributes
-        String email = oAuth2User.getAttribute("email");
-        String name = oAuth2User.getAttribute("name");
-        String profileImageLink = oAuth2User.getAttribute("picture");
-        String providerId = oAuth2User.getName();
+        var OAuth2User = (DefaultOAuth2User) authentication.getPrincipal();
 
-        if (email == null || name == null) {
-            log.error("Missing essential OAuth2 attributes: email or name is null");
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid OAuth response.");
+        User user = new User();
+        user.setUserId(UUID.randomUUID().toString());
+        user.setRole("USER");
+        user.setEnabled(true);
+        user.setEmailVerified(true);
+
+        if(providerName.equalsIgnoreCase("google")){
+            user.setEmail(OAuth2User.getAttribute("email"));
+            user.setProfileImageLink(OAuth2User.getAttribute("picture"));
+            user.setName(OAuth2User.getAttribute("name"));
+            user.setProviderId(OAuth2User.getName());
+            user.setProvider(Providers.GOOGLE);
+            user.setAbout("This account was created using Google");
+        }else if(providerName.equalsIgnoreCase("github")){
+            String email = OAuth2User.getAttribute("email") != null
+                    ? OAuth2User.getAttribute("email")
+                    : OAuth2User.getAttribute("login") + "@gmail.com";
+            String profileImageLink = OAuth2User.getAttribute("avatar_url");
+            String name = OAuth2User.getAttribute("name") != null
+                    ? OAuth2User.getAttribute("name")
+                    : OAuth2User.getAttribute("login");
+
+            user.setEmail(email);
+            user.setProfileImageLink(profileImageLink);
+            user.setName(name);
+            user.setProviderId(OAuth2User.getName());
+            user.setProvider(Providers.GITHUB);
+            user.setAbout("This account was created using GitHub");
+        }else {
+            log.error("Invalid OAuth2 provider: {}", providerName);
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid OAuth2 provider.");
             return;
         }
 
-        // Check if user exists and update or create accordingly
-        Optional<User> optionalUser = userService.findByEmail(email);
 
-        if (optionalUser.isPresent()) {
-            User existingUser = optionalUser.get();
-            log.info("User already exists, updating information for user: {}", email);
-            existingUser.setName(name);
-            existingUser.setProfileImageLink(profileImageLink);
-            existingUser.setProviderId(providerId);
-            existingUser.setEnabled(true);
-            existingUser.setEmailVerified(true);
-            existingUser.setProvider(Providers.GOOGLE);
-            userService.updateUser(existingUser);
-        } else {
-            log.info("Creating a new user for email: {}", email);
-            User newUser = User.builder()
-                    .email(email)
-                    .name(name)
-                    .profileImageLink(profileImageLink)
-                    .provider(Providers.GOOGLE)
-                    .userId(UUID.randomUUID().toString())
-                    .enabled(true)
-                    .role("USER")
-                    .emailVerified(true)
-                    .providerId(providerId)
-                    .about("This account was created using Google OAuth")
-                    .build();
-            userService.updateUser(newUser);
+        // Check if user exists and update or create accordingly
+        Optional<User> existingUser = userService.findByEmail(user.getEmail());
+        if(existingUser.isPresent()){
+            user.setUserId(existingUser.get().getUserId());
+            userService.updateUser(user);
+        }else {
+            userService.updateUser(user);
         }
 
         // Redirect to the dashboard

@@ -1,4 +1,3 @@
-// src/main/java/com/scm/smart_contact_manager/service/UserService.java
 package com.scm.smart_contact_manager.service;
 
 import com.scm.smart_contact_manager.exception.ResourceNotFoundException;
@@ -31,10 +30,6 @@ public class UserService implements UserDetailsService {
         newUser.setPassword(passwordEncoder.encode(user.getPassword()));
         log.info("User saved successfully");
         userRepository.save(newUser);
-    }
-
-    public Optional<User> getUserById(String userId) {
-        return userRepository.findById(userId);
     }
 
     public Optional<User> findByEmail(String email) {
